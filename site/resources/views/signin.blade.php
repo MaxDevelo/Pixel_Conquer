@@ -5,7 +5,7 @@
 	@parent
 	<form action="/authenticate" method="post">
 		@csrf
-		<label for="login">Login</label>       <input type="text"     id="login"    name="login"    required autofocus></br>
+		<label for="mail">Email</label>       <input type="text"     id="mail"    name="mail"    required autofocus></br>
 		<label for="password">Password</label> <input type="password" id="password" name="password" required></br>
  	<input type="submit" value="Signin"></br>
 	</form>

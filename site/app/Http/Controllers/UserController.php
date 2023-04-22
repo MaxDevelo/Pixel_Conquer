@@ -18,9 +18,9 @@ class UserController extends Controller
    */
   public function home(Request $request)
   {
-    // Créer 900 instances de modèle Pixel
-    // for ($i = 0; $i < 30; $i++) {
-    //   for ($j = 0; $j < 30; $j++) {
+    // Créer 2500 instances de modèle Pixel
+    // for ($i = 0; $i < 50; $i++) {
+    //   for ($j = 0; $j < 50; $j++) {
     //     $pixel = new Pixel([
     //       'coordinate_x' => $i,
     //       'coordinate_y' => $j,
@@ -40,7 +40,9 @@ class UserController extends Controller
 
   public function account(Request $request)
   {
-    return view('account', ["UserEloquent" => $request->session()->get("UserEloquent") ?? null]);
+    $id = $request->session()->get("User")->user_id;
+    $user = UserEloquent::where('user_id', $id)->first();
+    return view('account', ["User" => $user ?? null]);
   }
   public function signup(Request $request)
   {
@@ -48,7 +50,7 @@ class UserController extends Controller
   }
   public function formpassword(Request $request)
   {
-    return view('formpassword', ['message', $request->session()->get('message'), 'UserEloquent' => $request->session()->get("UserEloquent")]);
+    return view('formpassword', ['message', $request->session()->get('message'), 'User' => $request->session()->get("User")]);
   }
 
   public function signout(Request $request)
@@ -59,28 +61,28 @@ class UserController extends Controller
 
   public function authenticate(Request $request)
   {
-
+    $request->session()->put('User', null);
     $request->session()->forget('message');
 
-    if (!$request->input('login') || !$request->input('password')) {
+    if (!$request->input('mail') || !$request->input('password')) {
       return redirect()->route('signin');
       exit();
     }
 
     // 3. On sécurise les données reçues
-    $login = (string) htmlentities($_POST['login']);
+    $mail = (string) htmlentities($_POST['mail']);
     $password = (string) htmlentities($_POST['password']);
 
 
     try {
-      $user = UserEloquent::where('user', $login)->firstOrFail();
+      $user = UserEloquent::where('mail', $mail)->firstOrFail();
     } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
       $request->session()->flash('message', $e->getMessage());
       return redirect()->route('signin');
       exit();
     }
     if (Hash::check($password, $user->password)) {
-      $request->session()->put('UserEloquent', $user);
+      $request->session()->put('User', $user);
       return redirect()->route('account');
       exit();
     } else {
@@ -96,7 +98,7 @@ class UserController extends Controller
 
     $request->session()->forget('message');
 
-    if (!$request->hasAny(['login', 'password', 'confirm'])) {
+    if (!$request->hasAny(['login', 'mail', 'password', 'confirm'])) {
       $request->session()->flash('message', 'Some POST data are missing.');
       return redirect()->route('signin');
       exit();
@@ -119,7 +121,7 @@ class UserController extends Controller
       $userEloquent->user = $login;
       $userEloquent->password = Hash::make($password);
       $userEloquent->color = $color;
-      $userEloquent->mail = $color;
+      $userEloquent->mail = $mail;
 
       $userEloquent->save();
 
@@ -136,7 +138,7 @@ class UserController extends Controller
 
     $request->session()->forget('message');
 
-    $user = $request->input('UserEloquent');
+    $user = $request->input('User');
     /******************************************************************************
      * Traitement des données de la requête
      */
@@ -177,7 +179,7 @@ class UserController extends Controller
 
     unset($_SESSION['message']);
 
-    $user = $request->session()->get('UserEloquent');
+    $user = $request->session()->get('User');
     try {
       $user->delete();
       $request->session()->flash('message',  $user);

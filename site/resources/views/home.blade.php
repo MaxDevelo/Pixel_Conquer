@@ -4,26 +4,32 @@
 <body>
     <h1>PIXEL CONQUER</h1>
     <table id="pixel_canvas"></table>
-    @php $isLoggedIn = session('UserEloquent'); $color =
-    $isLoggedIn->value('color'); @endphp
+    @php $isLoggedIn = session('User'); 
+    if (session('User')) {
+        $color = $isLoggedIn->color; 
+    } else {
+        $color = '#000000';
+    }
+    @endphp
     @php
         $pixels = App\Models\Pixel::all();
     @endphp
-        <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
-    <script >
+    {{"Color: " . $color}}
 
+        <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/laravel-echo/1.11.4/echo.min.js"></script>
+    <script >
         // On se connecte à notre compte Pusher
-        const pusher = new Pusher('e4f3f6c60791baa3a256', {
+        const pusher = new Pusher('{{ env("PUSHER_APP_KEY") }}', {
             cluster: 'eu',
             encrypted: true
         });
+        
 
-        // On écoute l'événement "PixelUpdated"
-        const channel = pusher.subscribe('pixel-channel');
+
+        const channel = pusher.subscribe('pixel');
         channel.bind('PixelUpdated', function(data) {
-            // On récupère les données envoyées par Pusher
             const pixel = data.pixel;
-
             // On met à jour la couleur du pixel sur la page en temps réel
             const td = document.getElementById(`pixel-${pixel.coordinate_x}-${pixel.coordinate_y}`);
             td.style.backgroundColor = pixel.color;
@@ -60,12 +66,13 @@
             elements.gridCanvas.innerHTML = "";
             let pixels = {!! json_encode($pixels) !!};
 
-            for (let y = 0; y < 30; y++) {
+            for (let y = 0; y < 50; y++) {
                 let tr = elements.gridCanvas.insertRow(y);
 
-                for (let x = 0; x < 30; x++) {
+                for (let x = 0; x < 50; x++) {
                     let td = tr.insertCell(x);
 
+                    td.id = `pixel-${x}-${y}`;
                     // Find the pixel with the same coordinates and set its color as the background color.
                     let pixel = pixels.find(p => p.coordinate_x == x && p.coordinate_y == y);
                     if (pixel) {
@@ -85,7 +92,7 @@
             let isLoggedIn = {{ $isLoggedIn ?'true': 'false' }};
         let colorUser = "{{ $color }}";
         function setGridColor(event) {
-            if (isLoggedIn) {
+            if (isLoggedIn && colorUser != "") {
                 let color = colorUser;
                 event.target.setAttribute(
                     "style",
@@ -106,23 +113,26 @@
          *
          * @function
          */
-        function saveColorToDB(x, y, color) {
-            let user_id = "{{ $isLoggedIn->value('user_id') }}";
-            $.ajax({
-                type: "POST",
-                url: "/pixel",
-                data: {
-                    x: x,
-                    y: y,
-                    user_id: user_id,
-                    color: color,
-                    _token: "{{ csrf_token() }}"
-                },
-                success: function () {
-                    // console.log("Pixel added successfully.");
-                }
-            });
-
+         function saveColorToDB(x, y, color) {
+            let user_id = "{{ $isLoggedIn->user_id ?? '' }}";
+            if (user_id) {
+                $.ajax({
+                    type: "POST",
+                    url: "/pixel",
+                    data: {
+                        x: x,
+                        y: y,
+                        user_id: user_id,
+                        color: color,
+                        _token: "{{ csrf_token() }}"
+                    },
+                    success: function () {
+                        // console.log("Pixel added successfully.");
+                    }
+                });
+            } else {
+                alert("You must be logged in to place pixels.");
+            }
         }
 
 

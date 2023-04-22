@@ -50,8 +50,20 @@ class PixelController extends Controller
 
         // Save the new pixel to the database
         $pixel->save();
-        event(new UpdateCarte($pixel));
-        
+
+        // Initialiser Pusher
+        $pusher = new Pusher(
+            env('PUSHER_APP_KEY'),
+            env('PUSHER_APP_SECRET'),
+            env('PUSHER_APP_ID'),
+            [
+                'cluster' => 'eu',
+                'useTLS' => true
+            ]
+        );
+
+        // Ecouter les événements
+        $pusher->trigger('pixel', 'PixelUpdated', ['pixel' => $pixel]);
         return redirect()->back();
     }
 }

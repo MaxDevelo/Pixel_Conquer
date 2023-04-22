@@ -20,10 +20,6 @@ Route::group([], function () {
   Route::fallback(function () {
     return redirect('/');
 });
-Route::get('/pusher', function(Request $request) {
-  $data = $request->all();
-  return view('welcome')->with('data', $data);
-});
 
 });
 

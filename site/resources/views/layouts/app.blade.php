@@ -7,7 +7,7 @@
       @yield('title')
     </title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    @if ( session('UserEloquent') )
+    @if ( session('User') )
       <link rel="stylesheet" type="text/css" href="css/styles.css">
       <link rel="icon" type="image/png" href="img/logo.png" />
     @else
@@ -26,7 +26,7 @@
           <div>
               <a href="home">Home</a>
               <a href="a-propos.php">Buy Pixel</a>
-              @if (session('UserEloquent'))
+              @if (session('User'))
                 <a href="{{route('account')}}">Account</a>
               @else
                 <a href="{{route('signin')}}">Signin</a>

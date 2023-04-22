@@ -5,11 +5,13 @@
 @section('container')
 @parent
 <p>
-	Hello {{$UserEloquent->value('user')}} !<br>
+	{{$User->user}}
 	Welcome on your account.
 </p>
 <ul>
 	<li><a href="/admin/formpassword">Change password.</a></li>
+
+
 </ul>
 <p><a href="/admin/signout">Sign out</a></p>
 

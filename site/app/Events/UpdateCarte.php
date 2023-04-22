@@ -18,7 +18,7 @@ class UpdateCarte
 
     public function broadcastOn()
     {
-        return ['pixel-channel'];
+        return ['pixel'];
     }
 
     public function broadcastAs()
