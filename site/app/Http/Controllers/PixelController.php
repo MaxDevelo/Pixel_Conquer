@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Pixel;
+use App\Models\UserEloquent;
 use Illuminate\Http\Request;
 use Pusher\Pusher;
 use UpdateCarte;
@@ -47,7 +48,15 @@ class PixelController extends Controller
             $pixel->user_id = $user;
             $pixel->save();
         }
-
+        $user = UserEloquent::find($user);
+        if($user->pixels > 0){
+            // Mettre à jour le nombre de pixels restants
+            $user->pixels = $user->pixels - 1;
+            $user->save();
+        }
+        $user = $request->session()->get("User");
+        $user = UserEloquent::where('user_id', $user->user_id)->firstOrFail();
+        $request->session()->put('User', $user);
         // Save the new pixel to the database
         $pixel->save();
 
@@ -64,6 +73,6 @@ class PixelController extends Controller
 
         // Ecouter les événements
         $pusher->trigger('pixel', 'PixelUpdated', ['pixel' => $pixel]);
-        return redirect()->back();
+        return redirect()->back(['User' => $request->session()->get("User")]);
     }
 }

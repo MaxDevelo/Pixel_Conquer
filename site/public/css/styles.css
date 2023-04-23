@@ -1,40 +1,39 @@
 body {
-    text-align: center;
-    background-color: #e8e6e6;
-	
+  text-align: center;
+  background-color: #e8e6e6;
+  font-family: 'Roboto', sans-serif;
 }
 
 h1 {
-    font-family: Monoton;
-    font-size: 70px;
-    margin: 0.2em;
+  font-size: 70px;
+  margin: 0.2em;
 }
 
 h2 {
-    margin: 1em 0 0.25em;
+  margin: 1em 0 0.25em;
 }
 
 h2:first-of-type {
-    margin-top: 0.5em;
+  margin-top: 0.5em;
 }
 
 
 table {
-	 border: 1px solid black;
-    border-collapse: collapse;
-    margin: 0 auto;
+  border: 1px solid black;
+  border-collapse: collapse;
+  margin: 0 auto;
 }
 
 tr {
-    height: 20px;
+  height: 20px;
 }
 
 td {
-    width: 20px;
+  width: 20px;
 }
 
 input[type=number] {
-    width: 6em;
+  width: 6em;
 }
 
 a {
@@ -43,54 +42,179 @@ a {
 }
 
 header {
-    padding: 20px 30px;
-    position: relative;
-  }
-  
+  padding: 20px 30px;
+  position: relative;
+}
+
 .lien-icone img {
-    margin-left: 30px;
-  }
-  
-  .lien-icone img:hover {
-    opacity: 0.5;
-  }
-  
+  margin-left: 30px;
+}
+
+.lien-icone img:hover {
+  opacity: 0.5;
+}
+
+.logo {
+  padding-left: 30px;
+}
+
+header,
+nav {
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+nav a {
+  margin-left: 10px;
+  margin-right: 10px;
+  font-size: 1.5em;
+}
+
+nav a:hover {
+  margin-left: 10px;
+  margin-right: 10px;
+  font-size: 1.5em;
+  border-bottom: 4px solid #000000;
+  transition: 0.4s;
+ }
+
+/* Media Queries */
+
+@media screen and (max-width: 996px) {
   .logo {
-    padding-left: 30px;
+    margin-bottom: 15px;
+    padding: 0;
   }
+
+  header,
+  nav {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  nav a {
+    margin-left: 10px;
+    margin-right: 10px;
+    font-size: 0.8em;
+  }
+
+  header {
+    padding: 15px;
+  }
+}
+
+.btn {
+  border: none;
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+  background: none;
+  cursor: pointer;
+  padding: 25px 80px;
+  display: inline-block;
+  margin: 15px 30px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 700;
+  outline: none;
+  position: relative;
+  -webkit-transition: all 0.3s;
+  -moz-transition: all 0.3s;
+  transition: all 0.3s;
+  border-radius: 10px;
+}
+
+.btn:after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  -webkit-transition: all 0.3s;
+  -moz-transition: all 0.3s;
+  transition: all 0.3s;
+}
+
+/* Button 1 */
+.btn {
+  border: 3px solid #000000;
+  color: #000000;
+}
+
+/* Button 1a */
+.btn:hover,
+.btn:active {
+  color: #ffffff;
+  background: #302f2f;
+}
+
+.quit {
+  background-color: #ececec;
+  color: rgb(205, 29, 29);
+  border: 3px solid #c12828;
+}
+
+.quit:hover,
+.quit:active {
+  background-color: #ba4242;
+  color: white;
+  border: 3px solid #302f2f;
+}
+
+.scoreboard {
+  width:50%;
+  background-color: #f8f8f800;
+  border-left: 1px solid #ccc;
+  margin:0 auto;
+}
+
+.scoreboard h2 {
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+  margin: 20px 0;
+}
+
+
+.scoreboard table {
+  margin: 0 auto;
+  border-collapse: collapse;
+}
+
+.scoreboard td {
+  padding: 20px;
+  border: 1px solid #ccc;
   
-      header, nav {
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-      }
-    
-     nav a {
-      margin-left: 10px;
-      margin-right: 10px;
-      font-size: 1.5em;
-     }
+}
 
-  /* Media Queries */
+.scoreboard td:first-child {
+  font-weight: bold;
+  width: 60%;
+}
 
-  @media screen and (max-width: 996px) {
-    .logo {
-        margin-bottom: 15px;
-        padding: 0;
-      }
-      header, nav {
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-      }
-    
-     nav a {
-      margin-left: 10px;
-      margin-right: 10px;
-      font-size: 0.8em;
-     }
-    
-     header {
-      padding: 15px;
-     }
-  }
+.scoreboard td:last-child {
+  text-align: center;
+  width: 40%;
+}
+
+.scoreboard .team-color {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  margin-right: 5px;
+  border: 1px solid #000;
+}
+.team-score{
+  padding:20px;
+  font-size:40px;
+  font-family: 'Roboto', sans-serif;
+  font-weight:bold;
+  color:white;
+}
+
+.scoreboard .team-color.blue { background-color: #0000ff;}
+.scoreboard .team-color.red { background-color: #ff0000; }
+.scoreboard .team-color.green { background-color: #00ff00; }
+.scoreboard .team-color.black { background-color: black; }
+.scoreboard .team-color.orange { background-color: #ff7f00; }
+.scoreboard .team-color.purple { background-color: #800080; }

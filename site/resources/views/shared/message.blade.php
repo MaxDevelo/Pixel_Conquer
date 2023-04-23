@@ -1,3 +1,3 @@
-@isset($message)
+{{-- @isset($message)
       {{$message}}
-@endisset
+@endisset --}}

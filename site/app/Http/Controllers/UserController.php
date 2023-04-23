@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Pixel;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Models\MyUser;
 use App\Models\UserEloquent;
@@ -31,7 +32,15 @@ class UserController extends Controller
     //     $pixel->save();
     //   }
     // }
-    return view('home', ['message' => $request->session()->get('message')]);
+    if ($request->session()->get("User")) {
+      $this->givepixel($request);
+      $user = $request->session()->get("User");
+      $user = UserEloquent::where('user_id', $user->user_id)->firstOrFail();
+      $request->session()->put('User', $user);
+      return view('home', ['message' => $request->session()->get('message'), 'User' => $request->session()->get("User")]);
+    } else {
+      return view('home', ['message' => $request->session()->get('message')]);
+    }
   }
   public function signin(Request $request)
   {
@@ -40,9 +49,11 @@ class UserController extends Controller
 
   public function account(Request $request)
   {
-    $id = $request->session()->get("User")->user_id;
-    $user = UserEloquent::where('user_id', $id)->first();
-    return view('account', ["User" => $user ?? null]);
+    $user = $request->session()->get("User");
+    $user = UserEloquent::where('user_id', $user->user_id)->firstOrFail();
+    $request->session()->put('User', $user);
+    $this->givepixel($request);
+    return view('account', ["User" => $request->session()->get("User") ?? null]);
   }
   public function signup(Request $request)
   {
@@ -115,6 +126,15 @@ class UserController extends Controller
       return redirect()->route('signup');
       exit();
     }
+
+
+    $existingUser = UserEloquent::where('mail', $mail)->first();
+    if ($existingUser) {
+      $request->session()->flash('message', 'This email is already in use');
+      return redirect()->route('signup');
+    }
+
+
     try {
       $userEloquent = new UserEloquent;
 
@@ -201,5 +221,24 @@ class UserController extends Controller
     $request->session()->flash('message',  "Account successfully deleted.");
     return redirect()->route('signin');
     exit();
+  }
+  // Give 10 pixel per day
+  public function givepixel(Request $request)
+  {
+    $user = $request->session()->get('User');
+    $user = UserEloquent::where('user_id', $user->user_id)->firstOrFail();
+    $lastUpdate = Carbon::parse($user->last_update)->startOfDay();
+    $today = Carbon::now()->startOfDay();
+    $diffInDays = $today->diffInDays($lastUpdate);
+
+    if ($diffInDays >= 1) {
+      // Ajoute 10 pixels et met à jour la date de dernière mise à jour
+      $user->pixel += 10;
+      $user->last_update = Carbon::now();
+      $user->save();
+    }
+
+    $request->session()->put('User', $user);
+    return redirect()->route('account');
   }
 }

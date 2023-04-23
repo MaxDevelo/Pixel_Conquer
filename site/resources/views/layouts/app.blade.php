@@ -8,8 +8,8 @@
     </title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     @if ( session('User') )
-      <link rel="stylesheet" type="text/css" href="css/styles.css">
-      <link rel="icon" type="image/png" href="img/logo.png" />
+      <link rel="stylesheet" type="text/css" href="../css/styles.css">
+      <link rel="icon" type="image/png" href="../img/logo.png" />
     @else
       <link rel="stylesheet" type="text/css" href="css/styles.css">
       <link rel="icon" type="image/png" href="img/logo.png" />
@@ -22,7 +22,11 @@
     @section('container')
     <header>
       <nav>
-          <img class="logo" width="100" height="100" src="img/logo.png" alt="logo Pixel Conquer">
+        @if ( session('User') )
+        <img class="logo" width="100" height="100" src="../img/logo.png" alt="logo Pixel Conquer">
+        @else
+        <img class="logo" width="100" height="100" src="img/logo.png" alt="logo Pixel Conquer">
+        @endif
           <div>
               <a href="home">Home</a>
               <a href="a-propos.php">Buy Pixel</a>

@@ -17,6 +17,10 @@ return new class extends Migration
             $table->id('user_id');
             $table->string('user');
             $table->string('color');
+            $table->integer('pixels')->default(10);
+            $table->integer('total_pixels')->default(0);
+            $table->integer('level')->default(0);
+            $table->date('last_update')->default(date('Y-m-d'));
             $table->string('mail')->unique();
             $table->string('password', 256);
             $table->timestamps();
